@@ -37,11 +37,27 @@
             View the full size images
           </mat-panel-description>
         </mat-expansion-panel-header>
-
-        <mat-form-field>
-          <mat-label>Country</mat-label>
-          <input matInput>
-        </mat-form-field>
+        <div style="padding: 5px 0;">
+          <mat-grid-list
+                         [cols]="colNum" rowHeight="272px"
+                         (window:resize)="onResize($event)"
+                         gutterSize="10px">
+            <mat-grid-tile *ngFor="let icon of icons">
+              <div class="icon-panel">
+                <div class="image-holder">
+<!--                  <img *ngIf="icon.url != undefined" [src]="icon.url" style="max-height: 200px; max-width: 200px" (click)="openFullImage(icon.url)"/>-->
+                  <img *ngIf="icon.url != undefined" [src]="icon.url" style="max-height: 200px; max-width: 200px"/>
+                  <div *ngIf="icon.url == undefined" style="background: #515151; height: 200px; width: 200px">
+                    <i>No Image!</i>
+                  </div>
+                </div>
+                <div style="vertical-align: center; text-align: center">
+                  {{icon.title}}
+                </div>
+              </div>
+            </mat-grid-tile>
+          </mat-grid-list>
+        </div>
 
         <mat-action-row>
           <button mat-button color="warn" (click)="prevStep()">Previous</button>
@@ -68,3 +84,8 @@
     </mat-accordion>
   </div>
 </div>
+
+
+<ng-template #fullSize let-data>
+  <img [src]="data.url" style="max-width: available" />
+</ng-template>
