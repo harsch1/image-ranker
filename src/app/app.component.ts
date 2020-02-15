@@ -21,8 +21,9 @@ export class AppComponent implements OnInit {
     name: this.name
   });
 
-  step = 1;
+  step = 0;
   nameFormSubmitted = false;
+  isVertPhone = false;
 
   constructor(public dialog: MatDialog) {}
 
@@ -31,6 +32,7 @@ export class AppComponent implements OnInit {
     this.icons = IconsJson.icons;
     this.width = window.innerWidth;
     this.colNum = this.getColumns(this.width);
+    this.isVertPhone = this.width < 600;
     console.log(this.icons);
   }
 
@@ -60,20 +62,24 @@ export class AppComponent implements OnInit {
   nextStep() {
     if (this.step === 0) {
       console.log(this.nameForm);
-      // if (this.nameForm.valid) {
-      //   this.nameFormSubmitted = true;
-      this.step++;
-      // } else {
-      //   this.name.markAsTouched();
-      // }
+      if (this.nameForm.valid) {
+        this.nameFormSubmitted = true;
+        this.step++;
+      } else {
+        this.name.markAsTouched();
+      }
     }
   }
   openFullImage(url: string): void {
+    console.log(window.innerWidth);
     this.dialog.open(this.modal, {
+      maxWidth: (window.innerWidth - 10) + 'px',
+      width: '700px',
+      maxHeight: (window.innerWidth - 10) + 'px',
+      height: '700px',
       data: {
-        width: window.innerWidth,
-        height: window.innerHeight,
-        url
+        url,
+        width: (window.innerWidth - 10) < 700 ? (window.innerWidth - 48) : 652,
       }
     });
   }

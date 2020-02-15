@@ -41,9 +41,15 @@
   align-items: center;
 }
 
-.icon-panel > .image-holder{
-  height:220px;
-  width:220px;
-  text-align: center;
+.icon-panel > .image-holder {
+  height: 220px;
+  width: 220px;
   line-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.mat-dialog-container {
 }

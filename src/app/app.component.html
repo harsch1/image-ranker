@@ -45,9 +45,9 @@
             <mat-grid-tile *ngFor="let icon of icons">
               <div class="icon-panel">
                 <div class="image-holder">
-<!--                  <img *ngIf="icon.url != undefined" [src]="icon.url" style="max-height: 200px; max-width: 200px" (click)="openFullImage(icon.url)"/>-->
-                  <img *ngIf="icon.url != undefined" [src]="icon.url" style="max-height: 200px; max-width: 200px"/>
-                  <div *ngIf="icon.url == undefined" style="background: #515151; height: 200px; width: 200px">
+                  <img *ngIf="icon.url != undefined" [src]="icon.url" style="max-height: 200px; max-width: 200px" (click)="openFullImage(icon.url)"/>
+<!--                  <img *ngIf="icon.url != undefined" [src]="icon.url" style="max-height: 200px; max-width: 200px"/>-->
+                  <div *ngIf="icon.url == undefined" style="background: #515151; height: 200px; width: 200px; text-align: center;">
                     <i>No Image!</i>
                   </div>
                 </div>
@@ -87,5 +87,9 @@
 
 
 <ng-template #fullSize let-data>
-  <img [src]="data.url" style="max-width: available" />
+
+  <mat-dialog-content *ngIf="data.width < 652">
+    <img [src]="data.url" [width]="data.width" />
+  </mat-dialog-content>
+  <img *ngIf="data.width >= 652" [src]="data.url" style = "max-width: 652px; max-height: 652px;">
 </ng-template>
