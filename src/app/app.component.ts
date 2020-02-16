@@ -10,23 +10,28 @@ import {MatDialog} from '@angular/material/dialog';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+
+  constructor(public dialog: MatDialog) {}
   @ViewChild('fullSize') modal: TemplateRef<any>;
   title = 'image-ranker';
   name = new FormControl('' , Validators.required);
   colNum: number;
   width: number;
+  iconMaxSize = 200;
+  iconBuffer = 20;
+  iconPanelSize = this.iconMaxSize + this.iconBuffer + 30;
+  iconMaxSizeCss = this.iconMaxSize + 'px';
+  iconTotalCss = (this.iconMaxSize + this.iconBuffer) + 'px';
+  iconPanelCss = this.iconPanelSize + 'px';
 
   icons  = [];
   nameForm = new FormGroup({
     name: this.name
   });
 
-  step = 0;
+  step = 1;
   nameFormSubmitted = false;
   isVertPhone = false;
-
-  constructor(public dialog: MatDialog) {}
-
 
   ngOnInit(): void {
     this.icons = IconsJson.icons;
@@ -41,7 +46,7 @@ export class AppComponent implements OnInit {
   }
 
   getColumns(width: number): number {
-    const panelWidth = 250;
+    const panelWidth = this.iconPanelSize;
     const paddingWidth = 15;
     if (Math.ceil(width / panelWidth) * width + 10 * Math.ceil(width / panelWidth) + 108 + 48 > width) {
       return Math.ceil((width - 108) / panelWidth) - 1;
@@ -68,18 +73,21 @@ export class AppComponent implements OnInit {
       } else {
         this.name.markAsTouched();
       }
+    } else if (this.step === 1) {
+      this.step++;
     }
   }
   openFullImage(url: string): void {
-    console.log(window.innerWidth);
+    const img = new Image();
+    img.src = url;
     this.dialog.open(this.modal, {
+      panelClass: 'custom-dialog-container',
       maxWidth: (window.innerWidth - 10) + 'px',
-      width: '700px',
-      maxHeight: (window.innerWidth - 10) + 'px',
-      height: '700px',
+      maxHeight: (window.innerHeight - 10) + 'px',
       data: {
         url,
-        width: (window.innerWidth - 10) < 700 ? (window.innerWidth - 48) : 652,
+        width: (window.innerWidth - 60),
+        height: (window.innerHeight - 60),
       }
     });
   }

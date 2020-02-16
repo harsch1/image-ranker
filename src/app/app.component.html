@@ -43,11 +43,10 @@
                          (window:resize)="onResize($event)"
                          gutterSize="10px">
             <mat-grid-tile *ngFor="let icon of icons">
-              <div class="icon-panel">
-                <div class="image-holder">
-                  <img *ngIf="icon.url != undefined" [src]="icon.url" style="max-height: 200px; max-width: 200px" (click)="openFullImage(icon.url)"/>
-<!--                  <img *ngIf="icon.url != undefined" [src]="icon.url" style="max-height: 200px; max-width: 200px"/>-->
-                  <div *ngIf="icon.url == undefined" style="background: #515151; height: 200px; width: 200px; text-align: center;">
+              <div class="icon-panel" [ngStyle]="{'height': iconPanelCss, 'width': iconPanelCss}">
+                <div class="image-holder" [ngStyle]="{'height': iconTotalCss, 'width': iconTotalCss, 'line-height': iconTotalCss}">
+                  <img *ngIf="icon.url != undefined" [src]="icon.url" [ngStyle]="{'max-width': iconMaxSizeCss, 'max-height': iconMaxSizeCss}" (click)="openFullImage(icon.url)"/>
+                  <div *ngIf="icon.url == undefined" style="background: #515151; text-align: center; vertical-align: center" [ngStyle]="{'width': iconMaxSizeCss, 'height': iconMaxSizeCss}">
                     <i>No Image!</i>
                   </div>
                 </div>
@@ -68,10 +67,10 @@
       <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)"  [disabled]="nameForm.invalid">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            Day of the trip
+            Icon Ranking
           </mat-panel-title>
           <mat-panel-description>
-            Inform the date you wish to travel
+            Rank the icons in the order of preference
           </mat-panel-description>
         </mat-expansion-panel-header>
 
@@ -86,10 +85,11 @@
 </div>
 
 
-<ng-template #fullSize let-data>
+<ng-template #fullSize let-data class="custom-dialog-container">
 
-  <mat-dialog-content *ngIf="data.width < 652">
-    <img [src]="data.url" [width]="data.width" />
+  <mat-dialog-content style= "max-height: none;">
+    <img [src]="data.url"
+         [style.max-width]="data.width < data.height ? data.width + 'px' : 'auto'"
+         [style.max-height]="data.height < data.width ? data.height + 'px' : 'auto'"/>
   </mat-dialog-content>
-  <img *ngIf="data.width >= 652" [src]="data.url" style = "max-width: 652px; max-height: 652px;">
 </ng-template>
