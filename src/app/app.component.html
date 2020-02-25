@@ -2,7 +2,7 @@
   <mat-toolbar class="mat-elevation-z6" style="position: fixed; top: 0; z-index: 2" color='primary'>
     <span> Image Ranker </span>
   </mat-toolbar>
-  <div style="flex: 1; display: flex; flex-direction: column; padding: 30px 30px">
+  <div style="flex: initial; display: flex; flex-direction: column; padding: 30px 30px" [ngStyle]="{'width':width+'px'}">
     <h2>Rank Some Images</h2>
     <mat-accordion  class="example-headers-align">
 <!--      Name panel-->
@@ -64,7 +64,7 @@
         </mat-action-row>
       </mat-expansion-panel>
 
-      <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)"  [disabled]="nameForm.invalid">
+      <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)"  [disabled]="nameForm.invalid" cdkDropListGroup>
         <mat-expansion-panel-header>
           <mat-panel-title>
             Icon Ranking
@@ -74,12 +74,60 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
 
+
+        <div class="dragDropTitle">
+          <h3>Rank the icons in order of preference <span class="required">*</span> <h4 style="color: #999999">Drag to reorder. 1 is your first choice, 2 is next, etc.</h4></h3>
+        </div>
+        <div class="dragDropWrapper">
+          <div class="dragDropContainer"  [ngStyle]="{'max-width': rankWidth+'px'}">
+            <div cdkDropList
+                 cdkDropListOrientation="horizontal"
+                 class="example-list listwithNumbers"
+                 [cdkDropListData]="rankedList"
+                 (cdkDropListDropped)="drop($event)">
+                <div class="example-box rankedDraggable" *ngFor="let icon of rankedList; let i = index" cdkDrag>
+                    <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+                    <div class="rankedImageHolder">
+                      <img *ngIf="icon.url != undefined" [src]="icon.url" style="width: 98px; height: 98px;"/>
+                      <div *ngIf="icon.url == undefined" style="text-align: center; vertical-align: middle; width: 100px;">
+                        {{icon.shortTitle != undefined ? icon.shortTitle : icon.title}}
+                      </div>
+                    </div>
+                    <div class="dragLabel">
+                      {{i+1}}
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="dragDropTitle">
+          <h4 style="color: #999999">Leave the icons you don't want to rank over here</h4>
+        </div>
+        <div class="dragDropWrapper">
+          <div class="dragDropContainer">
+            <div id="trashList" cdkDropList
+                 style="flex-wrap: wrap;"
+                 class="example-list"
+                 cdkDropListOrientation="horizontal"
+                 cdkDropListSortingDisabled
+                 [cdkDropListData]="startingIcons"
+                 (cdkDropListDropped)="drop($event)">
+              <div class="example-box" *ngFor="let icon of startingIcons" cdkDrag>
+                <img *ngIf="icon.url != undefined" [src]="icon.url" style="width: 98px; height: 98px;"/>
+                <div *ngIf="icon.url == undefined" style="text-align: center; vertical-align: middle; width: 100px;">
+                  {{icon.shortTitle != undefined ? icon.shortTitle : icon.title}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <mat-action-row>
           <button mat-button color="warn" (click)="prevStep()">Previous</button>
-          <button mat-button color="primary" (click)="nextStep()">End</button>
+          <button mat-button color="primary" (click)="submitAll()">End</button>
         </mat-action-row>
       </mat-expansion-panel>
-
     </mat-accordion>
   </div>
 </div>

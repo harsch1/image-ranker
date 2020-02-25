@@ -1,8 +1,10 @@
-import {Component, ElementRef, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 // @ts-ignore
 import IconsJson from '../assets/icons.json';
 import {MatDialog} from '@angular/material/dialog';
+import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+
 
 @Component({
   selector: 'app-root',
@@ -17,6 +19,8 @@ export class AppComponent implements OnInit {
   name = new FormControl('' , Validators.required);
   colNum: number;
   width: number;
+  formWidth: number;
+  rankWidth: number;
   iconMaxSize = 200;
   iconBuffer = 20;
   iconPanelSize = this.iconMaxSize + this.iconBuffer + 30;
@@ -29,16 +33,29 @@ export class AppComponent implements OnInit {
     name: this.name
   });
 
-  step = 1;
+  step = 0;
   nameFormSubmitted = false;
   isVertPhone = false;
+  startingIcons = [];
+  rankedList = [];
 
   ngOnInit(): void {
     this.icons = IconsJson.icons;
     this.width = window.innerWidth;
     this.colNum = this.getColumns(this.width);
     this.isVertPhone = this.width < 600;
-    console.log(this.icons);
+    this.startingIcons = IconsJson.icons.map(x => Object.assign({}, x));
+    this.formWidth = this.width - 60;
+    this.rankWidth = this.width - 110 - 18;
+  }
+  @HostListener('window:resize', ['$event'])
+  onWindowResize($event) {
+    this.width = window.innerWidth;
+    this.colNum = this.getColumns(this.width);
+    this.isVertPhone = this.width < 600;
+    this.formWidth = this.width - 60;
+    this.rankWidth = this.width - 110 - 18;
+    return undefined;
   }
 
   onResize(event) {
@@ -66,17 +83,21 @@ export class AppComponent implements OnInit {
 
   nextStep() {
     if (this.step === 0) {
-      console.log(this.nameForm);
-      if (this.nameForm.valid) {
-        this.nameFormSubmitted = true;
-        this.step++;
-      } else {
+      if (!this.nameForm.valid) {
         this.name.markAsTouched();
+        return;
+      } else {
+        this.nameFormSubmitted = true;
       }
-    } else if (this.step === 1) {
-      this.step++;
+    } else if (this.step === 2) {
+      if (this.rankedList.length === 0) {
+        alert('Please vote for at least one icon');
+        return;
+      }
     }
+    this.step++;
   }
+
   openFullImage(url: string): void {
     const img = new Image();
     img.src = url;
@@ -96,4 +117,21 @@ export class AppComponent implements OnInit {
     this.step--;
   }
 
+  submitAll() {
+    alert('Thanks for voting!');
+  }
+
+
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      if (event.container.id !== 'trashList') {
+        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      }
+    } else {
+      transferArrayItem(event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
+    }
+  }
 }
