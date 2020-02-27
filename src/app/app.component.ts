@@ -81,7 +81,7 @@ export class AppComponent implements OnInit {
     this.step = index;
   }
 
-  nextStep() {
+  nextStep(steps: number = 1) {
     if (this.step === 0) {
       if (!this.nameForm.valid) {
         this.name.markAsTouched();
@@ -95,7 +95,7 @@ export class AppComponent implements OnInit {
         return;
       }
     }
-    this.step++;
+    this.step = this.step + steps;
   }
 
   openFullImage(url: string): void {

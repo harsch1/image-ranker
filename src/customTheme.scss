@@ -5,11 +5,43 @@
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
 @include mat-core();
+$md-blurple: (
+  50 : #f3f5fc,
+  100 : #e1e6f7,
+  200 : #ced6f2,
+  300 : #bac5ed,
+  400 : #abb8e9,
+  500 : #9cace5,
+  600 : #94a5e2,
+  700 : #8a9bde,
+  800 : #8092da,
+  900 : #6e82d3,
+  A100 : #ffffff,
+  A200 : #ffffff,
+  A400 : #e5eaff,
+  A700 : #ccd6ff,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #000000,
+    600 : #000000,
+    700 : #000000,
+    800 : #000000,
+    900 : #000000,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$candy-app-primary: mat-palette($mat-orange);
+$candy-app-primary: mat-palette($md-blurple);
 $candy-app-accent:  mat-palette($mat-red);
 
 // The warn palette is optional (defaults to red).

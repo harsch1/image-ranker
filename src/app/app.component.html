@@ -1,5 +1,5 @@
 <div class="main-div">
-  <mat-toolbar class="mat-elevation-z6" style="position: fixed; top: 0; z-index: 2" color='primary'>
+  <mat-toolbar class="mat-elevation-z6" style="position: fixed; top: 0; z-index: 2; background: #556CCB; color: white">
     <span> Image Ranker </span>
   </mat-toolbar>
   <div style="flex: initial; display: flex; flex-direction: column; padding: 30px 30px" [ngStyle]="{'width':width+'px'}">
@@ -23,7 +23,8 @@
       </mat-form-field>
 
       <mat-action-row>
-        <button mat-button color="primary" (click)="nextStep()" type="submit">Next</button>
+        <button mat-button color="primary" (click)="nextStep(1)" type="submit">View Icons</button>
+        <button mat-button color="primary" (click)="nextStep(2)" type="submit">Vote on Icons</button>
       </mat-action-row>
     </mat-expansion-panel>
 
@@ -31,12 +32,15 @@
       <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" [disabled]="nameForm.invalid">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            Images
+            View Icons
           </mat-panel-title>
           <mat-panel-description>
-            View the full size images
+            View the full size icons
           </mat-panel-description>
         </mat-expansion-panel-header>
+        <div class="dragDropTitle">
+          <h3>Click an icon to see it full size. Scroll down to the next section if you want to vote.</h3>
+        </div>
         <div style="padding: 5px 0;">
           <mat-grid-list
                          [cols]="colNum" rowHeight="272px"
@@ -59,8 +63,8 @@
         </div>
 
         <mat-action-row>
-          <button mat-button color="warn" (click)="prevStep()">Previous</button>
-          <button mat-button color="primary" (click)="nextStep()">Next</button>
+          <button mat-button color="warn" (click)="prevStep()">Change User Info</button>
+          <button mat-button color="primary" (click)="nextStep()">Vote on Icons</button>
         </mat-action-row>
       </mat-expansion-panel>
 
@@ -124,8 +128,8 @@
           </div>
         </div>
         <mat-action-row>
-          <button mat-button color="warn" (click)="prevStep()">Previous</button>
-          <button mat-button color="primary" (click)="submitAll()">End</button>
+          <button mat-button color="warn" (click)="prevStep()">View Icons</button>
+          <button mat-button color="primary" (click)="submitAll()">Submit</button>
         </mat-action-row>
       </mat-expansion-panel>
     </mat-accordion>
