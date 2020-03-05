@@ -1,10 +1,9 @@
-import {Component, ElementRef, HostListener, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, HostListener, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-// @ts-ignore
-import IconsJson from '../assets/icons.json';
 import {MatDialog} from '@angular/material/dialog';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-
+import * as sheets from 'google-spreadsheet';
+import creds from '../assets/credentials.json';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +12,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 })
 export class AppComponent implements OnInit {
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private cd: ChangeDetectorRef) {}
   @ViewChild('fullSize') modal: TemplateRef<any>;
   title = 'image-ranker';
   name = new FormControl('' , Validators.required);
@@ -27,34 +26,47 @@ export class AppComponent implements OnInit {
   iconMaxSizeCss = this.iconMaxSize + 'px';
   iconTotalCss = (this.iconMaxSize + this.iconBuffer) + 'px';
   iconPanelCss = this.iconPanelSize + 'px';
+  doc: any;
 
-  icons  = [];
+  // icons  = [];
   nameForm = new FormGroup({
     name: this.name
   });
 
   step = 0;
   nameFormSubmitted = false;
-  isVertPhone = false;
   startingIcons = [];
   rankedList = [];
+  icons = [];
 
   ngOnInit(): void {
-    this.icons = IconsJson.icons;
+    // this.icons = IconsJson.icons;
     this.width = window.innerWidth;
     this.colNum = this.getColumns(this.width);
-    this.isVertPhone = this.width < 600;
-    this.startingIcons = IconsJson.icons.map(x => Object.assign({}, x));
     this.formWidth = this.width - 60;
     this.rankWidth = this.width - 110 - 18;
+    this.initSheets().then(() => console.log('Loaded from sheets'));
   }
+
+  async initSheets() {
+    this.doc = new sheets.GoogleSpreadsheet('19AstxA2-L_Ok1wm5lmijbk3ttVuIZBmbVPE0mKOhPm4');
+    await this.doc.useServiceAccountAuth(creds);
+    await this.doc.loadInfo();
+    const sheet = this.doc.sheetsByIndex[0];
+    sheet.getRows().then(resolve => {
+      this.icons = resolve;
+      this.shuffle(this.icons);
+      this.startingIcons = this.icons;
+    });
+  }
+
   @HostListener('window:resize', ['$event'])
   onWindowResize($event) {
     this.width = window.innerWidth;
     this.colNum = this.getColumns(this.width);
-    this.isVertPhone = this.width < 600;
     this.formWidth = this.width - 60;
     this.rankWidth = this.width - 110 - 18;
+    this.cd.detectChanges();
     return undefined;
   }
 
@@ -64,7 +76,6 @@ export class AppComponent implements OnInit {
 
   getColumns(width: number): number {
     const panelWidth = this.iconPanelSize;
-    const paddingWidth = 15;
     if (Math.ceil(width / panelWidth) * width + 10 * Math.ceil(width / panelWidth) + 108 + 48 > width) {
       return Math.ceil((width - 108) / panelWidth) - 1;
     }
@@ -75,6 +86,14 @@ export class AppComponent implements OnInit {
       return 'You must enter a value';
     }
     return 'Unknown error';
+  }
+
+  shuffle( array: any[]): any[] {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
   }
 
   setStep(index: number) {
@@ -118,7 +137,30 @@ export class AppComponent implements OnInit {
   }
 
   submitAll() {
-    alert('Thanks for voting!');
+    if (this.rankedList.length === 0) {
+      alert('Please vote for at least one icon. (You can do this by dragging it from the lower box to the upper one)');
+    } else {
+      const sheet = this.doc.sheetsByIndex[1];
+      (sheet.addRow({
+        name: this.name.value,
+        voteString: this.rankedList.map(icon => icon.index).join(','),
+        date: new Date().toUTCString()
+      }, {insert: true}) as Promise<any>).then(row => {
+        (sheet.saveUpdatedCells() as Promise<any>).then(() => {
+          alert('Successfully submitted your vote! Let harsch know if there were any issues while voting ' +
+            'or things to change about the site');
+          location.reload();
+        }, error => {
+          console.log(error);
+          console.log(row);
+          alert('Error submitting vote. Please try again. Contact harsch if this keeps happening');
+        });
+      }, error => {
+        console.log(error);
+        console.log(sheet);
+        alert('Error creating vote. Please try again. Contact harsch if this keeps happening');
+      });
+    }
   }
 
 

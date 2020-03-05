@@ -1,9 +1,9 @@
 <div class="main-div">
   <mat-toolbar class="mat-elevation-z6" style="position: fixed; top: 0; z-index: 2; background: #556CCB; color: white">
-    <span> Image Ranker </span>
+    <span> Icon Ranker </span>
   </mat-toolbar>
   <div style="flex: initial; display: flex; flex-direction: column; padding: 30px 30px" [ngStyle]="{'width':width+'px'}">
-    <h2>Rank Some Images</h2>
+    <h2>Vote on the Server Icons for the Upcoming Month</h2>
     <mat-accordion  class="example-headers-align">
 <!--      Name panel-->
       <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)">
@@ -39,7 +39,7 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
         <div class="dragDropTitle">
-          <h3>Click an icon to see it full size. Scroll down to the next section if you want to vote.</h3>
+          <h3>Click an icon to see it full size.</h3> <h4>Scroll down to the next section if you want to vote.</h4>
         </div>
         <div style="padding: 5px 0;">
           <mat-grid-list
@@ -49,13 +49,13 @@
             <mat-grid-tile *ngFor="let icon of icons">
               <div class="icon-panel" [ngStyle]="{'height': iconPanelCss, 'width': iconPanelCss}">
                 <div class="image-holder" [ngStyle]="{'height': iconTotalCss, 'width': iconTotalCss, 'line-height': iconTotalCss}">
-                  <img *ngIf="icon.url != undefined" [src]="icon.url" [ngStyle]="{'max-width': iconMaxSizeCss, 'max-height': iconMaxSizeCss}" (click)="openFullImage(icon.url)"/>
-                  <div *ngIf="icon.url == undefined" style="background: #515151; text-align: center; vertical-align: center" [ngStyle]="{'width': iconMaxSizeCss, 'height': iconMaxSizeCss}">
+                  <img *ngIf="icon.imageUrl != undefined && icon.imageUrl.length > 0" [src]="icon.imageUrl" [ngStyle]="{'max-width': iconMaxSizeCss, 'max-height': iconMaxSizeCss}" (click)="openFullImage(icon.imageUrl)"/>
+                  <div *ngIf="icon.imageUrl == undefined || icon.imageUrl.length == 0" style="background: #515151; text-align: center; vertical-align: center" [ngStyle]="{'width': iconMaxSizeCss, 'height': iconMaxSizeCss}">
                     <i>No Image!</i>
                   </div>
                 </div>
                 <div style="vertical-align: center; text-align: center">
-                  {{icon.title}}
+                  {{icon.iconIdea}}
                 </div>
               </div>
             </mat-grid-tile>
@@ -80,7 +80,7 @@
 
 
         <div class="dragDropTitle">
-          <h3>Rank the icons in order of preference <span class="required">*</span> <h4 style="color: #999999">Drag to reorder. 1 is your first choice, 2 is next, etc.</h4></h3>
+          <h3>Rank the icons in order of preference<span class="required">*</span> <h4>Drag to reorder. 1 is your first choice, 2 is next, etc.</h4></h3>
         </div>
         <div class="dragDropWrapper">
           <div class="dragDropContainer"  [ngStyle]="{'max-width': rankWidth+'px'}">
@@ -92,9 +92,9 @@
                 <div class="example-box rankedDraggable" *ngFor="let icon of rankedList; let i = index" cdkDrag>
                     <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
                     <div class="rankedImageHolder">
-                      <img *ngIf="icon.url != undefined" [src]="icon.url" style="width: 98px; height: 98px;"/>
-                      <div *ngIf="icon.url == undefined" style="text-align: center; vertical-align: middle; width: 100px;">
-                        {{icon.shortTitle != undefined ? icon.shortTitle : icon.title}}
+                      <img *ngIf="icon.imageUrl != undefined && icon.imageUrl.length > 0" [src]="icon.imageUrl" style="width: 98px; height: 98px;"/>
+                      <div *ngIf="icon.imageUrl == undefined || icon.imageUrl.length == 0" style="text-align: center; vertical-align: middle; width: 100px;">
+                        {{icon.shortTitle != undefined ? icon.shortTitle : icon.iconIdea}}
                       </div>
                     </div>
                     <div class="dragLabel">
@@ -107,7 +107,7 @@
 
 
         <div class="dragDropTitle">
-          <h4 style="color: #999999">Leave the icons you don't want to rank over here</h4>
+          <h4>Leave the icons you don't want to rank over here</h4>
         </div>
         <div class="dragDropWrapper">
           <div class="dragDropContainer">
@@ -119,8 +119,8 @@
                  [cdkDropListData]="startingIcons"
                  (cdkDropListDropped)="drop($event)">
               <div class="example-box" *ngFor="let icon of startingIcons" cdkDrag>
-                <img *ngIf="icon.url != undefined" [src]="icon.url" style="width: 98px; height: 98px;"/>
-                <div *ngIf="icon.url == undefined" style="text-align: center; vertical-align: middle; width: 100px;">
+                <img *ngIf="icon.imageUrl != undefined && icon.imageUrl.length > 0" [src]="icon.imageUrl" style="width: 98px; height: 98px;"/>
+                <div *ngIf="icon.imageUrl == undefined || icon.imageUrl.length == 0" style="text-align: center; vertical-align: middle; width: 100px;">
                   {{icon.shortTitle != undefined ? icon.shortTitle : icon.title}}
                 </div>
               </div>
