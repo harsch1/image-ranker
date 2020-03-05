@@ -13,7 +13,7 @@ import creds from '../assets/credentials.json';
 export class AppComponent implements OnInit {
 
   constructor(public dialog: MatDialog, private cd: ChangeDetectorRef) {}
-  @ViewChild('fullSize') modal: TemplateRef<any>;
+  @ViewChild('fullSize', {static: false}) modal: TemplateRef<any>;
   title = 'image-ranker';
   name = new FormControl('' , Validators.required);
   colNum: number;

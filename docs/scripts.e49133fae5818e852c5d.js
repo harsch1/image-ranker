@@ -1,0 +1,1 @@
+const GoogleSpreadsheet=require("./lib/GoogleSpreadsheet"),GoogleSpreadsheetWorksheet=require("./lib/GoogleSpreadsheetWorksheet"),GoogleSpreadsheetRow=require("./lib/GoogleSpreadsheetRow"),{GoogleSpreadsheetFormulaError}=require("./lib/errors");module.exports={GoogleSpreadsheet,GoogleSpreadsheetWorksheet,GoogleSpreadsheetRow,GoogleSpreadsheetFormulaError};

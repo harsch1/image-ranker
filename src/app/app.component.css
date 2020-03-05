@@ -61,19 +61,6 @@
   vertical-align: top;
 }
 
-.example-list {
-  /*min-width: 100px;*/
-  border: solid 1px #6e6e6e;
-  min-height: 100px;
-  display: flex;
-  flex-direction: row;
-  background: #515151;
-  border-radius: 4px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  margin-bottom: 10px;
-  /*flex-basis: 100px;*/
-}
 .listwithNumbers {
   height: 145px;
   padding-bottom: 15px;
@@ -106,6 +93,19 @@
   border-radius: 100px;
 }
 
+.example-list {
+  /*min-width: 100px;*/
+  border: solid 1px #6e6e6e;
+  min-height: 100px;
+  display: flex;
+  flex-direction: row;
+  background: #515151;
+  border-radius: 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin-bottom: 10px;
+  /*flex-basis: 100px;*/
+}
 .example-box {
   margin: 5px;
   border: solid 1px #7e7e7e;
