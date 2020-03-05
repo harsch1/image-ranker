@@ -56,7 +56,7 @@ export class AppComponent implements OnInit {
     sheet.getRows().then(resolve => {
       this.icons = resolve;
       this.shuffle(this.icons);
-      this.startingIcons = this.icons;
+      this.startingIcons = this.icons.concat([]);
     });
   }
 
