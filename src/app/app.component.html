@@ -1,6 +1,6 @@
 <div class="main-div">
   <mat-toolbar class="mat-elevation-z6" style="position: fixed; top: 0; z-index: 2; background: #556CCB; color: white">
-    <span> Icon Ranker </span>
+    <span> Icon Voter </span>
   </mat-toolbar>
   <div style="flex: initial; display: flex; flex-direction: column; padding: 30px 30px" [ngStyle]="{'width':width+'px'}">
     <h2>Vote on the Server Icons for the Upcoming Month</h2>
@@ -80,13 +80,14 @@
 
 
         <div class="dragDropTitle">
-          <h3>Rank the icons in order of preference<span class="required">*</span> <h4>Drag icons from the bottom box to the top one. Then reorder the ones in the top box. 1 is your first choice, 2 is next, etc.</h4></h3>
+          <h3>Rank the icons in order of preference<span class="required">*</span> <h4>Drag icons from the bottom box to the top one.<br>Then reorder the ones in the top box (1 is your first choice, 2 is next, etc.)</h4></h3>
         </div>
         <div class="dragDropWrapper">
           <div class="dragDropContainer"  [ngStyle]="{'max-width': rankWidth+'px'}">
             <div cdkDropList
                  cdkDropListOrientation="horizontal"
                  class="example-list listwithNumbers"
+                 style="padding-left: 15px; padding-right: 15px;"
                  [cdkDropListData]="rankedList"
                  (cdkDropListDropped)="drop($event)">
                 <div class="example-box rankedDraggable" *ngFor="let icon of rankedList; let i = index" cdkDrag>
